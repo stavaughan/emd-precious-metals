@@ -1,0 +1,32 @@
+import dotenv from 'dotenv';
+dotenv.config();
+import asyncHandler from 'express-async-handler';
+import axios from 'axios';
+
+const API_KEY = process.env.METALS_API;
+
+const metalsController = {
+
+    /**
+     * @desc Get metals data from www.metals-api.com
+     * @route POST /api/metals
+     * @access Private
+     */
+    getMetals: asyncHandler(async (req, res) => {
+
+        const reqBody = await req.body;
+        const metals = await reqBody.selSymbols;
+
+        try {
+            const response = await axios({
+                method: "get",
+                url: `https://www.metals-api.com/api/latest?access_key=${API_KEY}&base=USD&symbols=${metals}`
+            });
+            res.status(200).json(response.data);
+        } catch (err) {
+            res.status(500).send({ message: err })
+        }
+    })
+}
+
+export default metalsController
