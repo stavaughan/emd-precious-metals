@@ -1,6 +1,7 @@
-import path from 'path';
 import express from 'express';
 import dotenv from 'dotenv';
+import path from 'path';
+import connectDB from './config/db.js';
 import cors from 'cors';
 import helmet from "helmet";
 import bodyParser from 'body-parser';
@@ -11,6 +12,7 @@ import { errorHandler } from './middleware/errorMiddleware.js';
 import { setCache } from './middleware/cacheControl.js';
 import messages from './utils/messages.js';
 import metalsRouter from './routes/metalsRouter.js';
+import settingsRouter from './routes/settingsRouter.js';
 import currDir from './lib/currDir.js';
 
 connectDB();
@@ -43,8 +45,8 @@ const jsonEncode = { limit: '50mb', extended: true }
 app.use(
     helmet.contentSecurityPolicy({
         directives: {
-            "script-src": ["'self'", "cdn.jsdelivr.net"],
-            "img-src": ["'self'", "data:", "blob:"],
+            "script-src": ["'self'", "cdn.jsdelivr.net", "localhost:8097"],
+            "img-src": ["'self'", "res.cloudinary.com", "data:", "blob:"],
         },
     })
 );
@@ -62,8 +64,7 @@ const apiLimiter = rateLimit({
 })
 
 app.use(`${PREFIX}/`, apiLimiter)
-
-// Metals from www.metals-api.com
+app.use(`${PREFIX}/app-settings`, settingsRouter)
 app.use(`${PREFIX}/metals`, metalsRouter)
 
 const __dirname = currDir(import.meta.url);

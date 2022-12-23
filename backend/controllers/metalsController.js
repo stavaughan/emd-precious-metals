@@ -7,11 +7,6 @@ const API_KEY = process.env.METALS_API;
 
 const metalsController = {
 
-    /**
-     * @desc Get metals data from www.metals-api.com
-     * @route POST /api/metals
-     * @access Private
-     */
     getMetals: asyncHandler(async (req, res) => {
 
         const reqBody = await req.body;

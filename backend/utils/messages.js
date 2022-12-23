@@ -20,6 +20,8 @@ const messages = {
 
     errorWithServer: 'Server Error. The server has encountered a situation it does not know how to handle.',
 
+    noContent: 'No Content. The server has successfully processed the request and is not returning any content.',
+
 }
 
 export default messages;
